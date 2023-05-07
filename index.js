@@ -46,7 +46,7 @@ const getNearestLift = (floorIndex) => {
       break;
     }
   }
-  console.log("coming floor index arr", comingFloorIndexArr);
+  //   console.log("coming floor index arr", comingFloorIndexArr);
 
   if (comingFloorIndexArr.length === 2) {
     if (
@@ -65,7 +65,7 @@ const getNearestLift = (floorIndex) => {
     comingFloorIndex = comingFloorIndexArr[0];
   }
   const { liftsArr, busyLiftIndex } = liftsData[comingFloorIndex] || {};
-  console.log("coming floor index", comingFloorIndex);
+  //   console.log("coming floor index", comingFloorIndex);
 
   return {
     comingFloorIndex,
@@ -74,7 +74,7 @@ const getNearestLift = (floorIndex) => {
 };
 
 const handleLifts = (floorIndex) => {
-  console.log("-------------------------------");
+  //   console.log("-------------------------------");
   let liftIndex;
   let comingFloorIndex;
   if (
@@ -91,23 +91,23 @@ const handleLifts = (floorIndex) => {
   }
 
   const lifts = document.querySelectorAll(".lift");
-  console.log(
-    "lifts data => ",
-    liftsData,
-    "floorIndex is => ",
-    floorIndex,
-    "coming florr index => ",
-    comingFloorIndex,
-    "lift index => ",
-    liftIndex
-    // lifts[liftIndex]
-  );
+  //   console.log(
+  //     "lifts data => ",
+  //     liftsData,
+  //     "floorIndex is => ",
+  //     floorIndex,
+  //     "coming florr index => ",
+  //     comingFloorIndex,
+  //     "lift index => ",
+  //     liftIndex
+  //     // lifts[liftIndex]
+  //   );
 
   const animateDoors = () => {
     const leftDoors = document.querySelectorAll(".door-left");
     const rightDoors = document.querySelectorAll(".door-right");
     // console.log(liftIndex, "left ", leftDoors, "right ", rightDoors);
-    console.log("DOORS ANIMATINGGG", floorIndex);
+    // console.log("DOORS ANIMATINGGG", floorIndex);
 
     if (!leftDoors[liftIndex].classList.contains("leftDoorAnimate")) {
       leftDoors[liftIndex].classList.add("leftDoorAnimate");
@@ -120,7 +120,7 @@ const handleLifts = (floorIndex) => {
         lifts[liftIndex].removeEventListener("transitionend", animateDoors);
         liftsData[floorIndex].isBusy = false;
         liftsData[floorIndex].busyLiftIndex = "";
-        console.log("lifts Data final ", liftsData);
+        // console.log("lifts Data final ", liftsData);
       }, 2500);
     }
     if (!rightDoors[liftIndex].classList.contains("rightDoorAnimate")) {
@@ -160,7 +160,7 @@ const handleLifts = (floorIndex) => {
   if (comingFloorIndex !== floorIndex) {
     lifts[liftIndex].style.transform = `translateY(-${floorIndex * 100}px)`;
     lifts[liftIndex].style["transition-duration"] = `2s`;
-    console.log("BEFORE TRANSITION END FLOOR INDEX", floorIndex);
+    // console.log("BEFORE TRANSITION END FLOOR INDEX", floorIndex);
 
     // console.log("AFTER TRANSITION END FLOOR INDEX", floorIndex);
     lifts[liftIndex].addEventListener("transitionend", animateDoors);
