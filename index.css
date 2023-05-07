@@ -1,0 +1,104 @@
+body {
+  font-family: sans-serif;
+}
+
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.error {
+  color: red;
+  font-size: 12px;
+}
+.text-center {
+  text-align: center;
+}
+.fit-content {
+  width: fit-content;
+}
+.hide {
+  display: none;
+}
+.flex {
+  display: flex;
+}
+.flex-column {
+  flex-direction: column;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-start {
+  justify-content: flex-start;
+}
+.gap-8 {
+  gap: 8px;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.liftsAndFloors {
+  border: 1px solid black;
+}
+.lift {
+  box-sizing: border-box;
+  width: 100px;
+  height: 100px;
+  background: chocolate;
+  position: relative;
+  padding: 10px;
+  display: flex;
+}
+.door-left {
+  position: absolute;
+  background-color: rgb(47, 38, 38);
+  width: 40px;
+  height: calc(100% - 20px);
+  left: 10px;
+}
+.door-right {
+  position: absolute;
+  background-color: rgb(47, 38, 38);
+  width: 40px;
+  height: calc(100% - 20px);
+  right: 10px;
+  border-left: 1px solid white;
+}
+.leftDoorAnimate,
+.rightDoorAnimate {
+  animation-name: leftDoorAnimate;
+  animation-duration: 2.5s;
+}
+@keyframes leftDoorAnimate {
+  0% {
+    width: 40px;
+  }
+  50% {
+    width: 0;
+  }
+  100% {
+    width: 40px;
+  }
+}
+/* .closeAndOpenLeft {
+  transform: translateX(-50%);
+  transition-duration: 2s;
+} */
+.floor {
+  height: 100px;
+  width: 100px;
+  background-color: cornsilk;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  /* padding: 5px 10px; */
+  /* margin-bottom: 10px; */
+}
+.floor-container {
+  border-bottom: 1px solid grey;
+}
