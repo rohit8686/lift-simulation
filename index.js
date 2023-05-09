@@ -202,12 +202,20 @@ const handleError = (e) => {
         hasError = true;
         errors[i].innerText = `No.of ${name} must be greater than 1`;
         errors[i].classList.remove("hide");
+      } else if (e.target[i].value > 10) {
+        hasError = true;
+        errors[i].innerText = `No.of ${name} must be less than or equal 10`;
+        errors[i].classList.remove("hide");
       } else errors[i].classList.add("hide");
     }
     if (name == "lifts") {
       if (e.target[i].value < 1) {
         hasError = true;
         errors[i].innerText = `No.of ${name} must be greater than 0`;
+        errors[i].classList.remove("hide");
+      } else if (e.target[i].value > 10) {
+        hasError = true;
+        errors[i].innerText = `No.of ${name} must be less than or equal 10`;
         errors[i].classList.remove("hide");
       } else errors[i].classList.add("hide");
     }
