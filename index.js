@@ -204,7 +204,7 @@ const handleError = (e) => {
         errors[i].classList.remove("hide");
       } else if (e.target[i].value > 10) {
         hasError = true;
-        errors[i].innerText = `No.of ${name} must be less than or equal 10`;
+        errors[i].innerText = `No.of ${name} must be less than or equal to 10`;
         errors[i].classList.remove("hide");
       } else errors[i].classList.add("hide");
     }
@@ -215,7 +215,7 @@ const handleError = (e) => {
         errors[i].classList.remove("hide");
       } else if (e.target[i].value > 10) {
         hasError = true;
-        errors[i].innerText = `No.of ${name} must be less than or equal 10`;
+        errors[i].innerText = `No.of ${name} must be less than or equal to 10`;
         errors[i].classList.remove("hide");
       } else errors[i].classList.add("hide");
     }
