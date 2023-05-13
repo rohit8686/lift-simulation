@@ -7,6 +7,7 @@ const liftsAndFloors = document.querySelector(".liftsAndFloors");
 let noOfFloors = "";
 let noOfLifts = "";
 let liftsData = {};
+let floorsQueue = [];
 
 const getLifts = () => {
   let liftsHtml = "";
@@ -57,6 +58,7 @@ const getNearestLift = (floorIndex) => {
   } else if (comingFloorIndexArr.length === 1) {
     comingFloorIndex = comingFloorIndexArr[0];
   }
+
   const { liftsArr, busyLiftIndex } = liftsData[comingFloorIndex] || {};
 
   return {
@@ -92,6 +94,10 @@ const handleLifts = (floorIndex) => {
         lifts[liftIndex].removeEventListener("transitionend", animateDoors);
         liftsData[floorIndex].isBusy = false;
         liftsData[floorIndex].busyLiftIndex = "";
+        if (floorsQueue.length) {
+          handleLifts(floorsQueue[0]);
+          floorsQueue.shift();
+        }
       }, 5000);
     }
     if (!rightDoors[liftIndex].classList.contains("rightDoorAnimate")) {
@@ -101,7 +107,10 @@ const handleLifts = (floorIndex) => {
       }, 5000);
     }
   };
-  if (comingFloorIndex !== undefined) {
+
+  if (comingFloorIndex == undefined && !floorsQueue.includes(floorIndex)) {
+    floorsQueue.push(floorIndex);
+  } else if (comingFloorIndex !== undefined) {
     const { liftsArr, busyLiftIndex } = liftsData[comingFloorIndex] || {};
 
     const nonBusyLiftIndex = liftsArr?.find(
@@ -116,7 +125,6 @@ const handleLifts = (floorIndex) => {
       ];
       liftsData[floorIndex].busyLiftIndex = liftIndex;
 
-      liftsData[comingFloorIndex].isBusy = false;
       liftsData[comingFloorIndex].liftsArr = liftsData[
         comingFloorIndex
       ].liftsArr.filter((liftIndex) => liftIndex !== nonBusyLiftIndex);
