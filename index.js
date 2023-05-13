@@ -2,8 +2,6 @@ const floors = document.querySelector(".floors");
 const lifts = document.querySelector(".lifts");
 const form = document.querySelector(".form-wrapper");
 const backBtn = document.querySelector(".back-btn");
-const doorLeft = document.querySelector(".door-left");
-const doorRight = document.querySelector(".door-right");
 
 const liftsAndFloors = document.querySelector(".liftsAndFloors");
 let noOfFloors = "";
@@ -63,7 +61,7 @@ const getNearestLift = (floorIndex) => {
 
   return {
     comingFloorIndex,
-    liftIndex: liftsArr.find((liftIndex) => liftIndex !== busyLiftIndex),
+    liftIndex: liftsArr?.find((liftIndex) => liftIndex !== busyLiftIndex),
   };
 };
 
@@ -94,54 +92,51 @@ const handleLifts = (floorIndex) => {
         lifts[liftIndex].removeEventListener("transitionend", animateDoors);
         liftsData[floorIndex].isBusy = false;
         liftsData[floorIndex].busyLiftIndex = "";
-      }, 2500);
+      }, 5000);
     }
     if (!rightDoors[liftIndex].classList.contains("rightDoorAnimate")) {
       rightDoors[liftIndex].classList.add("rightDoorAnimate");
       setTimeout(() => {
         rightDoors[liftIndex].classList.remove("rightDoorAnimate");
-      }, 2500);
+      }, 5000);
     }
   };
+  if (comingFloorIndex !== undefined) {
+    const { liftsArr, busyLiftIndex } = liftsData[comingFloorIndex] || {};
 
-  const { liftsArr, busyLiftIndex } = liftsData[comingFloorIndex] || {};
+    const nonBusyLiftIndex = liftsArr?.find(
+      (liftIndex) => liftIndex !== busyLiftIndex
+    );
+    if (comingFloorIndex !== floorIndex) {
+      liftsData[floorIndex].hasLift = true;
+      liftsData[floorIndex].isBusy = true;
+      liftsData[floorIndex].liftsArr = [
+        nonBusyLiftIndex,
+        ...liftsData[floorIndex].liftsArr,
+      ];
+      liftsData[floorIndex].busyLiftIndex = liftIndex;
 
-  const nonBusyLiftIndex = liftsArr.find(
-    (liftIndex) => liftIndex !== busyLiftIndex
-  );
-  if (comingFloorIndex !== floorIndex) {
-    liftsData[floorIndex].hasLift = true;
-    liftsData[floorIndex].isBusy = true;
-    liftsData[floorIndex].liftsArr = [
-      nonBusyLiftIndex,
-      ...liftsData[floorIndex].liftsArr,
-    ];
-    liftsData[floorIndex].busyLiftIndex = liftIndex;
+      liftsData[comingFloorIndex].isBusy = false;
+      liftsData[comingFloorIndex].liftsArr = liftsData[
+        comingFloorIndex
+      ].liftsArr.filter((liftIndex) => liftIndex !== nonBusyLiftIndex);
+      liftsData[comingFloorIndex].hasLift =
+        liftsData[comingFloorIndex].liftsArr.length > 0 ? true : false;
 
-    liftsData[comingFloorIndex].isBusy = false;
-    liftsData[comingFloorIndex].liftsArr = liftsData[
-      comingFloorIndex
-    ].liftsArr.filter((liftIndex) => liftIndex !== nonBusyLiftIndex);
-    liftsData[comingFloorIndex].hasLift =
-      liftsData[comingFloorIndex].liftsArr.length > 0 ? true : false;
-  }
-
-  if (comingFloorIndex !== floorIndex) {
-    lifts[liftIndex].style.transform = `translateY(-${
-      floorIndex * 120 + floorIndex - 1
-    }px)`;
-    lifts[liftIndex].style["transition-duration"] = `2s`;
-    lifts[liftIndex].addEventListener("transitionend", animateDoors);
-  } else if (comingFloorIndex === floorIndex) {
-    liftsData[floorIndex].busyLiftIndex = liftIndex;
-    if (!liftsData[floorIndex].isBusy) {
-      animateDoors();
+      lifts[liftIndex].style.transform = `translateY(-${
+        floorIndex * 120 + floorIndex
+      }px)`;
+      lifts[liftIndex].style["transition-duration"] = `${
+        2 * Math.abs(comingFloorIndex - floorIndex)
+      }s`;
+      lifts[liftIndex].addEventListener("transitionend", animateDoors);
+    } else if (comingFloorIndex === floorIndex) {
+      if (!liftsData[floorIndex].isBusy) {
+        liftsData[floorIndex].busyLiftIndex = liftIndex;
+        liftsData[floorIndex].isBusy = true;
+        animateDoors();
+      }
     }
-    liftsData[floorIndex].isBusy = true;
-    setTimeout(() => {
-      liftsData[floorIndex].isBusy = false;
-      liftsData[floorIndex].busyLiftIndex = "";
-    }, 2500);
   }
 };
 
@@ -153,7 +148,7 @@ const showLiftsAndFloors = () => {
             hasLift: true,
             isBusy: false,
             busyLiftIndex: "",
-            liftsArr: Array(Number(noOfFloors))
+            liftsArr: Array(Number(noOfLifts))
               .fill("")
               .map((_, idx) => idx),
           }
@@ -169,11 +164,7 @@ const showLiftsAndFloors = () => {
       <button class="fit-content up">Up</button>
       <button class="fit-content down">Down</button>
     </div>
-    ${
-      i === 1
-        ? `<div class="flex flex-wrap justify-between gap-8">${getLifts()}</div>`
-        : ""
-    }
+    ${i === 1 ? `<div class="flex flex-wrap gap-8">${getLifts()}</div>` : ""}
     </div>`;
   }
 
@@ -190,7 +181,16 @@ const showLiftsAndFloors = () => {
   }
 };
 
+const getMaxLiftsAndFloors = () => {
+  if (screen.width > 1024) return 10;
+  if (screen.width > 850 && screen.width <= 1024) return 8;
+  if (screen.width > 768 && screen.width <= 850) return 7;
+  if (screen.width > 500 && screen.width <= 768) return 6;
+  if (screen.width > 0 && screen.width <= 500) return 4;
+};
+
 const handleError = (e) => {
+  const maxLiftsAndFloors = getMaxLiftsAndFloors();
   const errors = document.querySelectorAll(".error");
   let hasError = false;
   e.preventDefault();
@@ -202,9 +202,11 @@ const handleError = (e) => {
         hasError = true;
         errors[i].innerText = `No.of ${name} must be greater than 1`;
         errors[i].classList.remove("hide");
-      } else if (e.target[i].value > 10) {
+      } else if (e.target[i].value > maxLiftsAndFloors) {
         hasError = true;
-        errors[i].innerText = `No.of ${name} must be less than or equal to 10`;
+        errors[
+          i
+        ].innerText = `No.of ${name} must be less than or equal to ${maxLiftsAndFloors}`;
         errors[i].classList.remove("hide");
       } else errors[i].classList.add("hide");
     }
@@ -213,9 +215,11 @@ const handleError = (e) => {
         hasError = true;
         errors[i].innerText = `No.of ${name} must be greater than 0`;
         errors[i].classList.remove("hide");
-      } else if (e.target[i].value > 10) {
+      } else if (e.target[i].value > maxLiftsAndFloors) {
         hasError = true;
-        errors[i].innerText = `No.of ${name} must be less than or equal to 10`;
+        errors[
+          i
+        ].innerText = `No.of ${name} must be less than or equal to ${maxLiftsAndFloors}`;
         errors[i].classList.remove("hide");
       } else errors[i].classList.add("hide");
     }

@@ -1,5 +1,6 @@
 html {
   height: 100%;
+  font-size: 100%;
 }
 body {
   font-family: sans-serif;
@@ -70,6 +71,7 @@ body {
 .up,
 .down {
   background: #334155;
+  font-size: 1rem;
   color: #ffffff;
   border: none;
   padding: 4px 8px;
@@ -93,42 +95,42 @@ body {
 }
 .lift {
   box-sizing: border-box;
-  width: 100px;
+  width: 6.25rem;
   height: 120px;
   background: #db5161;
   position: relative;
-  padding: 10px;
+  padding: 0.625rem;
   display: flex;
 }
 .door-left {
   position: absolute;
   background-color: #1e293b;
-  width: 40px;
-  height: calc(100% - 20px);
-  left: 10px;
+  width: 2.5rem;
+  height: calc(100% - 1.25rem);
+  left: 0.625rem;
 }
 .door-right {
   position: absolute;
   background-color: #1e293b;
-  width: 40px;
-  height: calc(100% - 20px);
-  right: 10px;
+  width: 2.5rem;
+  height: calc(100% - 1.25rem);
+  right: 0.625rem;
   border-left: 1px solid white;
 }
 .leftDoorAnimate,
 .rightDoorAnimate {
   animation-name: leftDoorAnimate;
-  animation-duration: 2.5s;
+  animation-duration: 5s;
 }
 @keyframes leftDoorAnimate {
   0% {
-    width: 40px;
+    width: 2.5rem;
   }
   50% {
     width: 0;
   }
   100% {
-    width: 40px;
+    width: 2.5rem;
   }
 }
 /* .closeAndOpenLeft {
@@ -137,7 +139,7 @@ body {
 } */
 .floor {
   height: 120px;
-  width: 100px;
+  width: 6.25rem;
   background-color: #f3f4f6;
   display: flex;
   flex-direction: column;
@@ -149,4 +151,20 @@ body {
 }
 .floor-container {
   border-bottom: 1px solid grey;
+}
+
+@media screen and (max-width: 1280px) {
+  html {
+    font-size: 80%;
+  }
+}
+@media screen and (max-width: 768px) {
+  html {
+    font-size: 60%;
+  }
+}
+@media screen and (max-width: 425px) {
+  html {
+    font-size: 50%;
+  }
 }
