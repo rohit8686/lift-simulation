@@ -13,8 +13,8 @@ const getLifts = () => {
   let liftsHtml = "";
   for (let i = 0; i < noOfLifts; i++) {
     liftsHtml += `<div class="lift lift-${i + 1}">
-    <div class="door-left closeAndOpenLeft"></div>
-    <div class="door-right closeAndOpenRight"></div>
+    <div class="door-left"></div>
+    <div class="door-right"></div>
     </div>`;
   }
   return liftsHtml;
@@ -67,7 +67,7 @@ const getNearestLift = (floorIndex) => {
   };
 };
 
-const handleLifts = (floorIndex) => {
+const handleLifts = (floorIndex, isBtnClicked = true) => {
   let liftIndex;
   let comingFloorIndex;
   if (liftsData[floorIndex].hasLift) {
@@ -87,23 +87,49 @@ const handleLifts = (floorIndex) => {
     const rightDoors = document.querySelectorAll(".door-right");
 
     if (!leftDoors[liftIndex].classList.contains("leftDoorAnimate")) {
-      leftDoors[liftIndex].classList.add("leftDoorAnimate");
+      if (!isBtnClicked) {
+        setTimeout(
+          () => leftDoors[liftIndex].classList.add("leftDoorAnimate"),
+          100
+        );
+      } else leftDoors[liftIndex].classList.add("leftDoorAnimate");
 
       setTimeout(() => {
         leftDoors[liftIndex].classList.remove("leftDoorAnimate");
         lifts[liftIndex].removeEventListener("transitionend", animateDoors);
         liftsData[floorIndex].isBusy = false;
         liftsData[floorIndex].busyLiftIndex = "";
-        if (floorsQueue.length) {
-          handleLifts(floorsQueue[0]);
-          floorsQueue.shift();
-        }
       }, 5000);
     }
     if (!rightDoors[liftIndex].classList.contains("rightDoorAnimate")) {
-      rightDoors[liftIndex].classList.add("rightDoorAnimate");
+      if (!isBtnClicked) {
+        setTimeout(() => {
+          rightDoors[liftIndex].classList.add("rightDoorAnimate");
+        }, 100);
+      } else rightDoors[liftIndex].classList.add("rightDoorAnimate");
+
       setTimeout(() => {
         rightDoors[liftIndex].classList.remove("rightDoorAnimate");
+        if (floorsQueue.length) {
+          const floorsQueueObj = floorsQueue.reduce((acc, curr) => {
+            if (acc[curr]) {
+              acc[curr] += 1;
+              return acc;
+            } else {
+              acc[curr] = 1;
+              return acc;
+            }
+          }, {});
+          for (let [key, val] of Object.entries(floorsQueueObj)) {
+            const valIndex = floorsQueue.findIndex((floor) => floor == key);
+            if (!liftsData[key].isBusy) {
+              floorsQueue.splice(valIndex, 1);
+              handleLifts(Number(key), false);
+            }
+          }
+          // handleLifts(floorsQueue[0], false);
+          // floorsQueue.shift();
+        }
       }, 5000);
     }
   };
@@ -143,6 +169,8 @@ const handleLifts = (floorIndex) => {
         liftsData[floorIndex].busyLiftIndex = liftIndex;
         liftsData[floorIndex].isBusy = true;
         animateDoors();
+      } else {
+        if (isBtnClicked) floorsQueue.push(floorIndex);
       }
     }
   }

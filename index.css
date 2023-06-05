@@ -117,12 +117,26 @@ body {
   right: 0.625rem;
   border-left: 1px solid white;
 }
-.leftDoorAnimate,
-.rightDoorAnimate {
-  animation-name: leftDoorAnimate;
+.leftDoorAnimate {
+  animation-name: leftDoor;
   animation-duration: 5s;
 }
-@keyframes leftDoorAnimate {
+.rightDoorAnimate {
+  animation-name: rightDoor;
+  animation-duration: 5s;
+}
+@keyframes leftDoor {
+  0% {
+    width: 2.5rem;
+  }
+  50% {
+    width: 0;
+  }
+  100% {
+    width: 2.5rem;
+  }
+}
+@keyframes rightDoor {
   0% {
     width: 2.5rem;
   }
